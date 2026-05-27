@@ -190,3 +190,33 @@ else {
 }
 
 });
+
+// --- INTERRUPTOR DA GAVETA DE BOLÃO ---
+document.addEventListener('DOMContentLoaded', () => {
+  const btnMostrarBolao = document.getElementById('btn-mostrar-bolao');
+  const caixaRedeBolao = document.getElementById('caixa-rede-bolao');
+  const inputBolaoNomeReal = document.getElementById('auth-bolao-nome');
+
+  if (btnMostrarBolao && caixaRedeBolao) {
+    btnMostrarBolao.addEventListener('click', (e) => {
+      e.preventDefault(); // Impede qualquer comportamento padrão que possa piscar a tela
+      
+      // Liga ou desliga a classe que esconde a gaveta
+      caixaRedeBolao.classList.toggle('hidden');
+      
+      // Se a gaveta acabou de ser escondida...
+      if (caixaRedeBolao.classList.contains('hidden')) {
+        btnMostrarBolao.innerText = "Entrar ou Criar um Bolão (Opcional)";
+        // Trava de segurança: Limpa o texto para o login comum passar liso!
+        if (inputBolaoNomeReal) inputBolaoNomeReal.value = ""; 
+      } 
+      // Se a gaveta foi aberta...
+      else {
+        btnMostrarBolao.innerText = "Fechar opções de Bolão";
+      }
+    });
+  }
+});
+
+// 🚨 GATILHO INICIAL: Roda a função sozinho assim que a página carrega!
+atualizarPlaceholder();

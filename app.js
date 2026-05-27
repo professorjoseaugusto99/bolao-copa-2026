@@ -837,3 +837,131 @@ if (btnCarregarUsuarios && listaUsuariosAdmin) {
     }
   });
 }
+
+// =============================================================================
+// 📊 MÓDULO DE EXPORTAÇÃO DE DADOS (CSV COM SUPORTE EXCEL BR)
+// =============================================================================
+
+// Função Auxiliar: Transforma o texto em arquivo e força o download no navegador
+function baixarArquivoCSV(conteudo, nomeArquivo) {
+  // O caractere "\uFEFF" é o BOM (Byte Order Mark). Ele força o Excel a abrir em UTF-8 correto.
+  const blob = new Blob(["\uFEFF" + conteudo], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  
+  link.setAttribute("href", url);
+  link.setAttribute("download", nomeArquivo);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// 1. COMPROVANTE DO JOGADOR (Exportar palpites da própria conta)
+const btnExportarUser = document.getElementById('btn-exportar-meus-palpites');
+if (btnExportarUser) {
+  btnExportarUser.addEventListener('click', async () => {
+    // Importação dinâmica do Auth do Firebase para pegar o usuário logado na hora
+    const { getAuth } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js");
+    const auth = getAuth();
+    
+    if (!auth.currentUser) {
+      alert("Erro: Você precisa estar logado para exportar seus palpites.");
+      return;
+    }
+
+    try {
+      // Puxa o documento de palpites fresco direto do UID dele
+      const userDoc = await getDoc(doc(db, "palpites", auth.currentUser.uid));
+      
+      if (!userDoc.exists()) {
+        alert("Você ainda não salvou nenhum palpite para exportar.");
+        return;
+      }
+
+      const dados = userDoc.data();
+      const nomeJogador = dados.nome || "Jogador";
+      
+      // Monta o cabeçalho do arquivo CSV
+      let csv = `COMPROVANTE OFICIAL DE PALPITES - COPA 2026\n`;
+      csv += `Jogador:;${nomeJogador}\n`;
+      csv += `Data de Emissão:;${new Date().toLocaleString('pt-BR')}\n\n`;
+      csv += `Rodada;ID do Jogo;Palpite Time A;Palpite Time B\n`;
+
+      // Varre as 3 rodadas estruturadas no banco
+      const rodadas = ['rodada1', 'rodada2', 'rodada3'];
+      rodadas.forEach(rodada => {
+        if (dados[rodada]) {
+          // Ordena os jogos numericamente para o CSV ficar organizado
+          const jogosOrdenados = Object.keys(dados[rodada]).sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
+          
+          jogosOrdenados.forEach(jogoId => {
+            const p = dados[rodada][jogoId];
+            if (p && p.timeA !== undefined && p.timeB !== undefined) {
+              csv += `${rodada.toUpperCase()};${jogoId};${p.timeA};${p.timeB}\n`;
+            }
+          });
+        }
+      });
+
+      // Dispara o download do comprovante personalizado
+      const nomeArquivo = `Comprovante_Palpites_${nomeJogador.replace(/\s+/g, '_')}.csv`;
+      baixarArquivoCSV(csv, nomeArquivo);
+
+    } catch (error) {
+      console.error("Erro ao gerar comprovante:", error);
+      alert("Falha de comunicação ao tentar gerar o arquivo.");
+    }
+  });
+}
+
+// 2. BACKUP DO ADMINISTRADOR (Gera uma tabela mestre com os palpites de TODO MUNDO)
+const btnExportarAdmin = document.getElementById('btn-exportar-geral-csv');
+if (btnExportarAdmin) {
+  btnExportarAdmin.addEventListener('click', async () => {
+    const confirmar = confirm("Deseja gerar o relatório consolidado em CSV com os palpites de todos os usuários do banco de dados?");
+    if (!confirmar) return;
+
+    try {
+      const palpitesSnap = await getDocs(collection(db, "palpites"));
+      
+      if (palpitesSnap.empty) {
+        alert("Nenhum palpite cadastrado no sistema ainda.");
+        return;
+      }
+
+      // Cabeçalho da planilha mestre
+      let csv = `RELATÓRIO MESTRE AUDITADO - PALPITES DOS JOGADORES\n`;
+      csv += `Gerado em:;${new Date().toLocaleString('pt-BR')}\n\n`;
+      csv += `Jogador;Redes Inscritas;Rodada;ID do Jogo;Palpite Time A;Palpite Time B\n`;
+
+      // Varre cada usuário cadastrado na coleção
+      palpitesSnap.forEach(userDoc => {
+        const dados = userDoc.data();
+        const nome = dados.nome || "Jogador Sem Nome";
+        const redes = (dados.boloesInscritos && dados.boloesInscritos.length > 0) ? dados.boloesInscritos.join(" | ") : "Nenhum";
+        
+        const rodadas = ['rodada1', 'rodada2', 'rodada3'];
+        rodadas.forEach(rodada => {
+          if (dados[rodada]) {
+            const jogosOrdenados = Object.keys(dados[rodada]).sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
+            
+            jogosOrdenados.forEach(jogoId => {
+              const p = dados[rodada][jogoId];
+              if (p && p.timeA !== undefined && p.timeB !== undefined) {
+                csv += `${nome};${redes};${rodada.toUpperCase()};${jogoId};${p.timeA};${p.timeB}\n`;
+              }
+            });
+          }
+        });
+      });
+
+      // Baixa o dump geral de segurança
+      baixarArquivoCSV(csv, `Backup_Mestre_Palpites_Copa2026.csv`);
+
+    } catch (error) {
+      console.error("Erro ao exportar relatório geral:", error);
+      alert("Erro na rede ao tentar consolidar os dados.");
+    }
+  });
+}

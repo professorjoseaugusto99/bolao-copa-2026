@@ -16,7 +16,8 @@
             <p id="user-name-display">Carregando jogador...</p>
         </div>
         <div style="display: flex; gap: 10px;">
-            <button id="btn-regras" class="btn-small" style="background-color: #f39c12; color: #fff; border: none;">📖 Regras</button>
+          <button id="btn-exportar-meus-palpites" class="btn-small" style="background-color: #27ae60; color: #fff; border: none;" title="Baixar comprovante dos meus palpites">📄 baixar palpites</button>  
+          <button id="btn-regras" class="btn-small" style="background-color: #f39c12; color: #fff; border: none;">📖 Regras</button>
             <button id="logout-btn" class="btn-small">Sair</button>
         </div>
     </div>
@@ -57,6 +58,12 @@
     </div>
     
     <div id="admin-panel" class="hidden admin-box" style="background: #f5f5f5; border: 2px dashed #d32f2f; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+      <h4 style="margin-top: 10px; margin-bottom: 15px; color: #333;">👥 Gerenciamento de Jogadores Cadastrados</h4>
+      
+      <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+          <button id="btn-carregar-usuarios" class="btn-primary" style="background-color: #1976d2; margin-bottom: 0;">🔄 Carregar Lista de Jogadores</button>
+          <button id="btn-exportar-geral-csv" class="btn-primary" style="background-color: #8e44ad; margin-bottom: 0;">📊 Exportar CSV Geral</button>
+      </div>
       <h3 style="color: #d32f2f; margin-bottom: 15px;">Painel do Admin</h3>
       <button id="lock-bets-btn" class="btn-danger" style="margin-bottom: 20px;">🔒 Travar Apostas</button>
       
