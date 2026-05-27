@@ -322,3 +322,61 @@ button:hover {
   outline: none;
   box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
 }
+
+/* ==========================================================================
+   📱 AJUSTES MOBILE (RESPONSIVIDADE PARA SMARTPHONES)
+   ========================================================================== */
+@media (max-width: 600px) {
+  /* 1. Cabeçalho: Empilha o título e os botões */
+  .header-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px 10px;
+    gap: 15px;
+  }
+  
+  /* 2. Grupo de botões do cabeçalho: Força a ficarem lado a lado se der, ou quebram organizados */
+  .header-card > div:last-child {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* 3. Botões: Impede que o texto quebre e forme blocos quadrados */
+  .btn-small {
+    padding: 8px 12px;
+    font-size: 0.85em;
+    white-space: nowrap; 
+    flex: 1 1 auto;
+  }
+
+  /* 4. Painel do Bolão Ativo: Coloca o seletor em baixo do texto */
+  #painel-bolao-ativo {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #seletor-bolao-ativo {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  /* 5. Abas (Rodadas/Ranking): Divide o espaço para não sumirem da tela */
+  .tabs {
+    flex-wrap: wrap;
+  }
+  
+  .tab-btn {
+    flex: 1 1 40%;
+    font-size: 0.9em;
+    padding: 10px 5px;
+  }
+
+  /* 6. Cards de Jogo: Ajusta os tamanhos das caixinhas de placar */
+  .match-card input[type="number"] {
+    width: 40px;
+    height: 45px;
+    font-size: 1.2em;
+    padding: 5px;
+  }
+}
