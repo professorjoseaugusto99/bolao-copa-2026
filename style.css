@@ -372,11 +372,44 @@ button:hover {
     padding: 10px 5px;
   }
 
-  /* 6. Cards de Jogo: Ajusta os tamanhos das caixinhas de placar */
+/* 6. Cards de Jogo: Ajustes extremos para não vazar a tela */
+  .match-card {
+    padding: 12px 5px !important; /* Tira o enchimento lateral do cartão */
+    margin-bottom: 10px !important;
+  }
+
+  /* O contentor que segura os times, bandeiras e inputs */
+  .match-card > div:nth-child(2) { 
+    gap: 4px !important; /* Diminui o buraco entre os elementos */
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Diminui as bandeiras */
+  .match-card img {
+    width: 22px !important;
+    height: auto !important;
+    margin: 0 2px !important;
+  }
+
+  /* Trava o tamanho do nome dos times para não empurrar os inputs */
+  .match-card span {
+    font-size: 0.85em !important;
+    max-width: 75px !important; /* Limite rígido para o nome do país */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Coloca os "..." se o nome for gigante */
+    display: inline-block;
+    text-align: center;
+  }
+
+  /* As caixinhas de placar mais enxutas */
   .match-card input[type="number"] {
-    width: 40px;
-    height: 45px;
-    font-size: 1.2em;
-    padding: 5px;
+    width: 38px !important;
+    height: 40px !important;
+    font-size: 1.1em !important;
+    padding: 0 !important;
+    margin: 0 2px !important;
+    text-align: center;
   }
 }
