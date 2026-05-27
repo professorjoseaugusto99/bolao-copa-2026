@@ -372,40 +372,44 @@ button:hover {
     padding: 10px 5px;
   }
 
-/* 6. Cards de Jogo: Ajuste definitivo de centralização para Mobile */
+/* 6. Cards de Jogo: Chassi Flexbox Blindado para Mobile */
   .match-card {
     padding: 15px 5px !important;
     margin-bottom: 12px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important; /* Centra todo o conteúdo do card */
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
-  .match-card > div { 
+  /* A linha que segura as bandeiras e os placares */
+  .match-card > div:nth-child(2) { 
     display: flex !important;
+    flex-wrap: nowrap !important; /* Proíbe terminantemente a quebra de linha */
     justify-content: center !important;
     align-items: center !important;
     width: 100% !important;
     gap: 4px !important;
   }
 
-  .match-card img {
-    width: 22px !important;
-    height: auto !important;
-    margin: 0 2px !important;
-  }
-
-  /* Define larguras iguais e bloqueia a quebra de texto para centralizar perfeitamente */
-  .match-card span {
+  /* Aplica a trava em qualquer tag de texto (span ou div) que guarda o nome do país */
+  .match-card > div:nth-child(2) > span,
+  .match-card > div:nth-child(2) > div {
+    flex: 1 1 0px !important; /* Obriga os dois lados a terem rigorosamente o mesmo tamanho */
+    min-width: 0 !important; /* Truque mestre: permite que o texto encolha sem estourar a div */
     font-size: 0.8em !important;
-    width: 65px !important; /* Largura fixa de 65px para manter a simetria */
     text-align: center !important;
     white-space: nowrap !important;
     overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    display: inline-block !important;
+    text-overflow: ellipsis !important; /* Aciona os "..." */
   }
 
+  /* Tamanho das bandeiras */
+  .match-card img {
+    width: 22px !important;
+    height: auto !important;
+    flex-shrink: 0 !important; /* Impede a bandeira de ser esmagada */
+  }
+
+  /* Tamanho das caixinhas */
   .match-card input[type="number"] {
     width: 35px !important;
     height: 40px !important;
@@ -413,5 +417,6 @@ button:hover {
     text-align: center !important;
     padding: 0 !important;
     margin: 0 !important;
+    flex-shrink: 0 !important; /* Impede a caixinha de ser esmagada */
   }
 }
