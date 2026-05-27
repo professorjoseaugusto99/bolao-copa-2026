@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Palpites - Bolão Copa 2026</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+ 
+  <div class="container app-container">
+    
+    <div class="header-card">
+        <div class="user-info">
+            <h2>Bolão Copa 2026</h2>
+            <p id="user-name-display">Carregando jogador...</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button id="btn-regras" class="btn-small" style="background-color: #f39c12; color: #fff; border: none;">📖 Regras</button>
+            <button id="logout-btn" class="btn-small">Sair</button>
+        </div>
+    </div>
+    
+    <div id="tela-regras" class="hidden" style="background: #fff; border-radius: 8px; padding: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 15px; margin-bottom: 20px;">
+        <h2 style="color: #2e7d32; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 0;">📖 Regras Oficiais do Bolão</h2>
+        
+        <h3 style="margin-top: 20px; color: #444;">🎯 Pontuação</h3>
+        <p style="color: #555; font-size: 0.95em;">A pontuação do bolão segue critérios lógicos para premiar quem chega mais perto do resultado real:</p>
+        <ul style="line-height: 1.8; color: #555; font-size: 0.95em; background: #fafafa; padding: 15px 15px 15px 35px; border-radius: 8px; border: 1px solid #eee;">
+            <li><strong>25 Pontos (Placar em Cheio):</strong> Acerto exato dos gols de ambos os times.</li>
+            <li><strong>18 Pontos (Vencedor + Gols de 1 Lado):</strong> Acerto do vencedor ou empate, e cravou a quantidade de gols de um dos times.</li>
+            <li><strong>10 Pontos (Apenas Vencedor / Empate):</strong> Acertou quem venceu (ou o empate), mas errou os gols exatos de ambos.</li>
+            <li><strong>5 Pontos (Gols de 1 Lado):</strong> Errou o resultado final, mas acertou os gols exatos de uma das equipes.</li>
+        </ul>
+
+        <h3 style="margin-top: 20px; color: #444;">⏰ Prazos e Travamento</h3>
+        <ul style="line-height: 1.8; color: #555; font-size: 0.95em;">
+            <li>O bloqueio total de edição dos palpites acontecerá às <strong>23:59 do dia 10/06</strong>.</li>
+            <li>O primeiro jogo da Copa acontece no dia <strong>11/06</strong>.</li>
+            <li>Após o bloqueio do Administrador, o sistema entra em Modo Consulta e ninguém mais pode alterar palpites.</li>
+        </ul>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button id="btn-voltar-regras" class="btn-primary" style="padding: 10px 25px; font-size: 1.1em;">🔙 Voltar aos Palpites</button>
+        </div>
+    </div>
+
+    <div id="painel-bolao-ativo" class="hidden" style="background: #ffffff; border-radius: 8px; padding: 12px 15px; margin-top: 15px; margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; gap: 10px;">
+      <label for="seletor-bolao-ativo" style="font-size: 0.95em; font-weight: bold; color: #444; margin: 0; white-space: nowrap;">
+        🏆 Bolão Atual:
+      </label>
+      <select id="seletor-bolao-ativo" class="custom-select" style="flex: 1; max-width: 250px; padding: 8px; font-size: 0.95rem; border-radius: 6px; border: 1px solid #ccc; background-color: #fafafa; cursor: pointer;">
+      </select>
+      <button id="btn-copiar-chave" style="padding: 8px 12px; font-size: 0.9rem; border-radius: 6px; border: 1px solid #ccc; background-color: #fff; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; color: #555;" title="Copiar código do bolão">
+        📋 Copiar
+      </button>
+    </div>
+    
+    <div id="admin-panel" class="hidden admin-box" style="background: #f5f5f5; border: 2px dashed #d32f2f; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+      <h3 style="color: #d32f2f; margin-bottom: 15px;">Painel do Admin</h3>
+      <button id="lock-bets-btn" class="btn-danger" style="margin-bottom: 20px;">🔒 Travar Apostas</button>
+      
+      <h4 style="margin-top: 10px; margin-bottom: 10px; color: #333;">📢 Inserir Resultados Oficiais (Placar Real)</h4>
+      <h2 style="text-align: center; color: #e65100;">⚙️ Painel de Administrador</h2>
+      
+      <div style="text-align: center; margin-bottom: 20px;">
+        <select id="filtro-admin-rodadas" class="custom-select" style="margin-bottom: 20px;">
+          <option value="rodada1">Jogos da Rodada 1</option>
+          <option value="rodada2">Jogos da Rodada 2</option>
+          <option value="rodada3">Jogos da Rodada 3</option>
+          <option value="todas">Mostrar Todos os 72 Jogos</option>
+        </select>
+      </div>
+
+      <div id="admin-matches-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
+      <button id="save-results-btn" class="btn-primary" style="background-color: #e65100; margin-top: 15px;">💾 Salvar Resultados Reais</button>
+      
+      <hr style="border-top: 2px solid #ccc; margin: 30px 0 15px 0;">
+      <h4 style="margin-top: 10px; margin-bottom: 15px; color: #333;">👥 Gerenciamento de Jogadores Cadastrados</h4>
+      
+      <button id="btn-carregar-usuarios" class="btn-primary" style="background-color: #1976d2; margin-bottom: 15px;">🔄 Carregar Lista de Jogadores</button>
+      
+      <div id="lista-admin-usuarios" style="display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #ccc;">
+          <p style="text-align: center; color: #777; font-size: 0.9em; margin: 0;">Clique no botão azul acima para carregar todos os participantes.</p>
+      </div>
+      </div>
+  
+
+    <div class="tabs">
+      <button class="tab-btn active" data-target="tab-rodada1">Rodada 1</button>
+      <button class="tab-btn" data-target="tab-rodada2">Rodada 2</button>
+      <button class="tab-btn" data-target="tab-rodada3">Rodada 3</button>
+      <button class="tab-btn" data-target="tab-ranking">Ranking</button>
+    </div>
+
+    <div id="tab-rodada1" class="tab-content active">
+      <div id="list-rodada1" class="matches-container"></div>
+      <button class="btn-primary save-btn" data-rodada="rodada1">💾 Salvar Rodada 1</button>
+    </div>
+
+    <div id="tab-rodada2" class="tab-content hidden">
+      <div id="list-rodada2" class="matches-container"></div>
+      <button class="btn-primary save-btn" data-rodada="rodada2">💾 Salvar Rodada 2</button>
+    </div>
+
+    <div id="tab-rodada3" class="tab-content hidden">
+      <div id="list-rodada3" class="matches-container"></div>
+      <button class="btn-primary save-btn" data-rodada="rodada3">💾 Salvar Rodada 3</button>
+    </div>
+
+    <div id="tab-ranking" class="tab-content hidden">
+      <h2 style="text-align: center; color: #333; margin-bottom: 10px;">🏆 Classificação</h2>
+      
+      <div style="text-align: center; margin-bottom: 20px;">
+        <select id="filtro-ranking" class="custom-select">
+          <option value="geral">Geral (Todas as Rodadas)</option>
+          <option value="rodada1">Apenas Rodada 1</option>
+          <option value="rodada2">Apenas Rodada 2</option>
+          <option value="rodada3">Apenas Rodada 3</option>
+        </select>
+      </div>
+
+      <div id="ranking-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
+    </div>
+
+    <p id="feedback-msg" class="hidden feedback"></p>
+   
+  </div> <script type="module" src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head <link rel="icon" type="image/png" href="favicon.png">>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bolão Copa 2026</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="auth-card">
+      <h1 id="form-title">Entrar no Bolão</h1>
+      
+      <form id="auth-form">
+        <!-- O campo nome só aparece no cadastro -->
+        <div id="name-group" class="hidden">
+          <label for="nome">Nome ou Apelido</label>
+          <input type="text" id="nome" placeholder="Como a galera te chama?">
+        </div>
+        
+        <label for="email">E-mail</label>
+        <input type="email" id="email" required placeholder="seu@email.com">
+        
+<label for="senha">Senha</label>
+        <input type="password" id="senha" required placeholder="Mínimo de 6 caracteres">
+
+        <div id="bolao-group" style="margin-top: 15px; margin-bottom: 20px; padding: 15px; border: 2px solid #eee; border-radius: 8px; background-color: #fafafa; text-align: left;">
+          <p style="margin-top: 0; margin-bottom: 12px; font-weight: bold; color: #444; font-size: 0.9em;">Rede do Bolão:</p>
+
+          <div style="display: flex; gap: 15px; margin-bottom: 12px;">
+            <label style="cursor: pointer; font-size: 0.9em;">
+              <input type="radio" name="tipo_bolao" value="entrar" checked> Entrar em Existente
+            </label>
+            <label style="cursor: pointer; font-size: 0.9em;">
+              <input type="radio" name="tipo_bolao" value="criar"> Criar Novo
+            </label>
+          </div>
+
+          <input type="text" id="auth-bolao-nome" placeholder="Nome do Bolão (ex: FamiliaSilva)" style="width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 0.9rem;">
+        </div>
+        <button type="submit" id="submit-btn">Entrar</button>
+      </form>
+
+      <p id="toggle-text">Ainda não tem conta? <a href="#" id="toggle-link">Cadastre-se</a></p>
+      <p id="error-msg" class="error hidden"></p>
+    </div>
+  </div>
+  
+  <script type="module" src="auth.js"></script>
+</body>
+</html>
