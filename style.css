@@ -372,51 +372,51 @@ button:hover {
     padding: 10px 5px;
   }
 
-/* 6. Cards de Jogo: Chassi Flexbox Blindado para Mobile */
+/* 6. Cards de Jogo: Tratamento de Choque para Nomes Longos */
   .match-card {
-    padding: 15px 5px !important;
+    padding: 12px 2px !important;
     margin-bottom: 12px !important;
     width: 100% !important;
     box-sizing: border-box !important;
   }
 
-  /* A linha que segura as bandeiras e os placares */
+  /* A linha central que segura tudo */
   .match-card > div:nth-child(2) { 
     display: flex !important;
-    flex-wrap: nowrap !important; /* Proíbe terminantemente a quebra de linha */
     justify-content: center !important;
-    align-items: center !important;
+    align-items: center !important; /* Mantém as caixinhas no meio exato, mesmo se o texto quebrar linha */
     width: 100% !important;
-    gap: 4px !important;
+    gap: 3px !important;
   }
 
-  /* Aplica a trava em qualquer tag de texto (span ou div) que guarda o nome do país */
+  /* O segredo para Coreia do Sul e África do Sul */
   .match-card > div:nth-child(2) > span,
   .match-card > div:nth-child(2) > div {
-    flex: 1 1 0px !important; /* Obriga os dois lados a terem rigorosamente o mesmo tamanho */
-    min-width: 0 !important; /* Truque mestre: permite que o texto encolha sem estourar a div */
-    font-size: 0.8em !important;
+    flex: 1 !important; 
+    max-width: 26vw !important; /* Trava matemática: Nunca passa de 26% da tela */
+    font-size: 0.75rem !important; /* Fonte ligeiramente menor */
+    line-height: 1.1 !important; /* Deixa as palavras bem coladinhas se quebrar linha */
+    letter-spacing: -0.3px !important; /* Aproxima as letras de leve */
     text-align: center !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important; /* Aciona os "..." */
+    white-space: normal !important; /* PERMITE quebrar a linha com elegância */
+    word-wrap: break-word !important;
   }
 
-  /* Tamanho das bandeiras */
+  /* Bandeiras protegidas do esmagamento */
   .match-card img {
-    width: 22px !important;
+    width: 20px !important;
     height: auto !important;
-    flex-shrink: 0 !important; /* Impede a bandeira de ser esmagada */
+    flex-shrink: 0 !important;
   }
 
-  /* Tamanho das caixinhas */
+  /* Caixinhas protegidas do esmagamento */
   .match-card input[type="number"] {
-    width: 35px !important;
-    height: 40px !important;
+    width: 32px !important;
+    height: 38px !important;
     font-size: 1.1em !important;
     text-align: center !important;
     padding: 0 !important;
     margin: 0 !important;
-    flex-shrink: 0 !important; /* Impede a caixinha de ser esmagada */
+    flex-shrink: 0 !important;
   }
 }
