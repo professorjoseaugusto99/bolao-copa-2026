@@ -327,6 +327,12 @@ button:hover {
    📱 AJUSTES MOBILE (RESPONSIVIDADE PARA SMARTPHONES)
    ========================================================================== */
 @media (max-width: 600px) {
+
+  /* 🚀 NOVO GATILHO: Troca o papel de parede no telemóvel */
+  body {
+    background-image: url('imagens/wallpaper2.png') !important; /* Coloque aqui o nome exato da sua nova imagem */
+    background-position: center top !important;
+  }
   /* 1. Cabeçalho: Empilha o título e os botões */
   .header-card {
     flex-direction: column;
