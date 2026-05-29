@@ -329,9 +329,13 @@ button:hover {
 @media (max-width: 600px) {
 
   /* 🚀 NOVO GATILHO: Troca o papel de parede no telemóvel */
+/* 🚀 GATILHO: Troca o papel de parede no celular e deixa FIXO */
   body {
-    background-image: url('imagens/wallpaper2.png') !important; /* Coloque aqui o nome exato da sua nova imagem */
-    background-position: center top !important;
+    background-image: url('imagens\wallpaper2.jpg') !important; /* Lembre do caminho correto da pasta se precisar */
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+    background-size: cover !important;
   }
   /* 1. Cabeçalho: Empilha o título e os botões */
   .header-card {
