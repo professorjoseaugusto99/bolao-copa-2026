@@ -543,6 +543,7 @@ async function atualizarRanking(filtro = 'geral') {
 
     palpitesSnap.forEach((userDoc) => {
       const dados = userDoc.data();
+      const uid = userDoc.id;
 
       // 🚨 A MÁGICA DA VLAN ACONTECE AQUI:
       // Se o jogador não tiver a etiqueta desse bolão no array dele, o sistema ignora e pula!
@@ -568,7 +569,7 @@ async function atualizarRanking(filtro = 'geral') {
         }
       });
 
-      tabela.push({ nome: nome, pontos: pontosTotais });
+      tabela.push({ nome: nome, pontos: pontosTotais, uid: uid }); // 👈 2. UID ADICIONADO AQUI
     });
 
     // Ordena do maior para o menor
@@ -591,7 +592,10 @@ async function atualizarRanking(filtro = 'geral') {
       const card = document.createElement('div');
       card.style.cssText = "display: flex; justify-content: space-between; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 1.1em; margin-bottom: 8px;";
       card.innerHTML = `
-        <span><strong>${index + 1}º</strong> ${medalha} ${posicao.nome}</span>
+        <span style="display: flex; align-items: center; gap: 5px;">
+          <strong>${index + 1}º</strong> ${medalha} 
+          <span class="nome-clicavel" data-uid="${posicao.uid}" style="color: #1976d2; cursor: pointer; text-decoration: underline; font-weight: bold; margin-left: 5px;" title="Ver palpites de ${posicao.nome}">${posicao.nome}</span>
+        </span>
         <span style="color: #2e7d32; font-weight: 900;">${posicao.pontos} pts</span>
       `;
       rankingList.appendChild(card);
@@ -962,6 +966,111 @@ if (btnExportarAdmin) {
     } catch (error) {
       console.error("Erro ao exportar relatório geral:", error);
       alert("Erro na rede ao tentar consolidar os dados.");
+    }
+  });
+}
+
+// =============================================================================
+// 🔍 MÓDULO: ESPIAR PALPITES DO ADVERSÁRIO NO RANKING (VERSÃO 2.0)
+// =============================================================================
+
+const modalPalpites = document.getElementById('modal-palpites');
+const fecharModalBtn = document.getElementById('fechar-modal-btn');
+const listaModal = document.getElementById('modal-lista-palpites');
+const tituloModal = document.getElementById('modal-nome-jogador');
+const filtroModal = document.getElementById('filtro-modal-rodadas'); // O novo seletor!
+
+let dadosModalAtual = null; // Memória temporária para não gastar leitura do Firebase à toa
+
+// 1. Fechar o Modal
+if (fecharModalBtn && modalPalpites) {
+  fecharModalBtn.addEventListener('click', () => { modalPalpites.style.display = 'none'; });
+  modalPalpites.addEventListener('click', (e) => {
+      if(e.target === modalPalpites) modalPalpites.style.display = 'none';
+  });
+}
+
+// 2. Função inteligente que desenha os cards com nomes e filtro
+function renderizarPalpitesModal(filtro) {
+  if (!dadosModalAtual) return;
+  
+  let htmlPalpites = "";
+  const rodadas = filtro === 'todas' ? ['rodada1', 'rodada2', 'rodada3'] : [filtro];
+  
+  rodadas.forEach(rodada => {
+    if (dadosModalAtual[rodada]) {
+      const jogosOrdenados = Object.keys(dadosModalAtual[rodada]).sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
+      
+      let rodadaTemPalpite = false;
+      let nomeBonito = rodada.replace('rodada', 'Rodada ');
+      let htmlRodada = `<h4 style="margin: 15px 0 5px 0; color: #1976d2; font-size: 0.95em; text-transform: uppercase; border-bottom: 1px solid #ccc; padding-bottom: 3px;">${nomeBonito}</h4>`;
+      
+      jogosOrdenados.forEach(jogoId => {
+        const p = dadosModalAtual[rodada][jogoId];
+        
+        if (p.timeA !== undefined && p.timeB !== undefined) {
+          rodadaTemPalpite = true;
+          
+          // 🚀 A mágica de puxar os nomes reais da nossa lista de jogos lá de cima!
+          const jogoInfo = jogos[rodada].find(j => j.id === jogoId);
+          const nomeA = jogoInfo ? jogoInfo.timeA : "Time A";
+          const nomeB = jogoInfo ? jogoInfo.timeB : "Time B";
+
+          htmlRodada += `
+            <div style="background: #f4f6f8; padding: 10px 12px; border-radius: 8px; border: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.85em; color: #555; font-weight: bold; max-width: 65%; line-height: 1.2;">
+                ${nomeA} <br><span style="font-size: 0.8em; color: #999;">x</span> ${nomeB}
+              </span>
+              <span style="font-size: 1.2em; font-weight: bold; color: #333; text-align: right; min-width: 60px;">
+                ${p.timeA} <span style="color: #e65100; margin: 0 5px;">X</span> ${p.timeB}
+              </span>
+            </div>
+          `;
+        }
+      });
+      
+      if(rodadaTemPalpite) htmlPalpites += htmlRodada;
+    }
+  });
+  
+  listaModal.innerHTML = htmlPalpites === "" ? "<p style='text-align:center;'>Nenhum palpite nesta rodada.</p>" : htmlPalpites;
+}
+
+// 3. Escutador do filtro (quando o usuário troca a rodada no modal)
+if (filtroModal) {
+  filtroModal.addEventListener('change', (e) => {
+    renderizarPalpitesModal(e.target.value);
+  });
+}
+
+// 4. Interceptador de cliques no Ranking (O Gatilho)
+const containerRanking = document.getElementById('ranking-list'); 
+
+if (containerRanking) {
+  containerRanking.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('nome-clicavel')) {
+      const uidAlvo = e.target.getAttribute('data-uid');
+      const nomeAlvo = e.target.innerText;
+
+      tituloModal.innerText = `Palpites de ${nomeAlvo}`;
+      listaModal.innerHTML = "<p style='text-align:center; color: #555;'>Buscando no banco de dados...</p>";
+      modalPalpites.style.display = 'flex';
+      
+      if (filtroModal) filtroModal.value = 'todas'; // Reseta o filtro para mostrar tudo primeiro
+
+      try {
+        const docRef = await getDoc(doc(db, "palpites", uidAlvo));
+        if (docRef.exists()) {
+          dadosModalAtual = docRef.data(); // Guarda os dados na memória temporária
+          renderizarPalpitesModal('todas'); // Chama a função que desenha a tela
+        } else {
+          dadosModalAtual = null;
+          listaModal.innerHTML = "<p style='text-align:center; color: #d32f2f;'>Documento do jogador não encontrado.</p>";
+        }
+      } catch (error) {
+        console.error("Erro ao buscar palpites:", error);
+        listaModal.innerHTML = "<p style='text-align:center; color: #d32f2f;'>Falha de conexão.</p>";
+      }
     }
   });
 }
