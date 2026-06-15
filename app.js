@@ -971,16 +971,17 @@ if (btnExportarAdmin) {
 }
 
 // =============================================================================
-// 🔍 MÓDULO: ESPIAR PALPITES DO ADVERSÁRIO NO RANKING (VERSÃO 2.0)
+// 🔍 MÓDULO: ESPIAR PALPITES DO ADVERSÁRIO NO RANKING (VERSÃO 3.0 COM CORES)
 // =============================================================================
 
 const modalPalpites = document.getElementById('modal-palpites');
 const fecharModalBtn = document.getElementById('fechar-modal-btn');
 const listaModal = document.getElementById('modal-lista-palpites');
 const tituloModal = document.getElementById('modal-nome-jogador');
-const filtroModal = document.getElementById('filtro-modal-rodadas'); // O novo seletor!
+const filtroModal = document.getElementById('filtro-modal-rodadas'); 
 
-let dadosModalAtual = null; // Memória temporária para não gastar leitura do Firebase à toa
+let dadosModalAtual = null; 
+let placaresReaisModal = {}; // 🚀 Nova memória para guardar os resultados oficiais
 
 // 1. Fechar o Modal
 if (fecharModalBtn && modalPalpites) {
@@ -990,7 +991,7 @@ if (fecharModalBtn && modalPalpites) {
   });
 }
 
-// 2. Função inteligente que desenha os cards com nomes e filtro
+// 2. Função inteligente que desenha os cards com nomes, filtro e CORES
 function renderizarPalpitesModal(filtro) {
   if (!dadosModalAtual) return;
   
@@ -1011,17 +1012,43 @@ function renderizarPalpitesModal(filtro) {
         if (p.timeA !== undefined && p.timeB !== undefined) {
           rodadaTemPalpite = true;
           
-          // 🚀 A mágica de puxar os nomes reais da nossa lista de jogos lá de cima!
           const jogoInfo = jogos[rodada].find(j => j.id === jogoId);
           const nomeA = jogoInfo ? jogoInfo.timeA : "Time A";
           const nomeB = jogoInfo ? jogoInfo.timeB : "Time B";
 
+          // 🚀 LÓGICA DAS CORES (Semáforo)
+          let corFundo = "#f4f6f8"; // Padrão: Cinza claro (Jogo ainda não aconteceu)
+          let corBorda = "#e0e0e0";
+          let corPlacar = "#333";
+          let opacidade = "1";
+
+          const real = placaresReaisModal[jogoId];
+          if (real !== undefined) {
+             // O jogo já tem placar oficial, vamos calcular os pontos!
+             const pts = calcularPontos(p.timeA, p.timeB, real.timeA, real.timeB);
+             
+             if (pts === 25 || pts === 18) {
+                 corFundo = "#e8f5e9"; // Verde (Acertou muito)
+                 corBorda = "#81c784";
+                 corPlacar = "#2e7d32";
+             } else if (pts === 10 || pts === 5) {
+                 corFundo = "#fffde7"; // Amarelo (Acertou algo)
+                 corBorda = "#fff176";
+                 corPlacar = "#f57f17";
+             } else {
+                 corFundo = "#ffebee"; // Vermelho (Errou tudo)
+                 corBorda = "#e57373";
+                 corPlacar = "#c62828";
+                 opacidade = "0.7"; // Deixa o cartão dos erros um pouco mais apagado
+             }
+          }
+
           htmlRodada += `
-            <div style="background: #f4f6f8; padding: 10px 12px; border-radius: 8px; border: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div style="background: ${corFundo}; padding: 10px 12px; border-radius: 8px; border: 1px solid ${corBorda}; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; opacity: ${opacidade}; transition: all 0.3s ease;">
               <span style="font-size: 0.85em; color: #555; font-weight: bold; max-width: 65%; line-height: 1.2;">
                 ${nomeA} <br><span style="font-size: 0.8em; color: #999;">x</span> ${nomeB}
               </span>
-              <span style="font-size: 1.2em; font-weight: bold; color: #333; text-align: right; min-width: 60px;">
+              <span style="font-size: 1.2em; font-weight: bold; color: ${corPlacar}; text-align: right; min-width: 60px;">
                 ${p.timeA} <span style="color: #e65100; margin: 0 5px;">X</span> ${p.timeB}
               </span>
             </div>
@@ -1036,14 +1063,14 @@ function renderizarPalpitesModal(filtro) {
   listaModal.innerHTML = htmlPalpites === "" ? "<p style='text-align:center;'>Nenhum palpite nesta rodada.</p>" : htmlPalpites;
 }
 
-// 3. Escutador do filtro (quando o usuário troca a rodada no modal)
+// 3. Escutador do filtro
 if (filtroModal) {
   filtroModal.addEventListener('change', (e) => {
     renderizarPalpitesModal(e.target.value);
   });
 }
 
-// 4. Interceptador de cliques no Ranking (O Gatilho)
+// 4. Interceptador de cliques no Ranking
 const containerRanking = document.getElementById('ranking-list'); 
 
 if (containerRanking) {
@@ -1056,13 +1083,20 @@ if (containerRanking) {
       listaModal.innerHTML = "<p style='text-align:center; color: #555;'>Buscando no banco de dados...</p>";
       modalPalpites.style.display = 'flex';
       
-      if (filtroModal) filtroModal.value = 'todas'; // Reseta o filtro para mostrar tudo primeiro
+      if (filtroModal) filtroModal.value = 'todas';
 
       try {
-        const docRef = await getDoc(doc(db, "palpites", uidAlvo));
+        // 🚀 Busca o documento do jogador E os resultados reais ao mesmo tempo
+        const [docRef, docResultados] = await Promise.all([
+            getDoc(doc(db, "palpites", uidAlvo)),
+            getDoc(doc(db, "configuracoes", "resultados"))
+        ]);
+        
+        placaresReaisModal = docResultados.exists() ? docResultados.data().placarReal || {} : {};
+
         if (docRef.exists()) {
-          dadosModalAtual = docRef.data(); // Guarda os dados na memória temporária
-          renderizarPalpitesModal('todas'); // Chama a função que desenha a tela
+          dadosModalAtual = docRef.data(); 
+          renderizarPalpitesModal('todas'); 
         } else {
           dadosModalAtual = null;
           listaModal.innerHTML = "<p style='text-align:center; color: #d32f2f;'>Documento do jogador não encontrado.</p>";
