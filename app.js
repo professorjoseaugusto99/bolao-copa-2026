@@ -58,8 +58,8 @@ const jogos = {
   rodada2: [
     { id: "A3", timeA: "México", timeB: "Coreia do Sul", siglaA: "mx", siglaB: "kr", data: "18/06 • Quinta", hora: "22:00", local: "Guadalajara" },
     { id: "A4", timeA: "África do Sul", timeB: "Tchéquia", siglaA: "za", siglaB: "cz", data: "18/06 • Quinta", hora: "13:00", local: "Atlanta" },
-    { id: "B3", timeA: "Canadá", timeB: "Suíça", siglaA: "ca", siglaB: "ch", data: "18/06 • Quinta", hora: "16:00", local: "Vancouver" },
-    { id: "B4", timeA: "Bósnia", timeB: "Catar", siglaA: "ba", siglaB: "qa", data: "18/06 • Quinta", hora: "19:00", local: "Los Angeles" },
+    { id: "B3", timeA: "Canadá", timeB: "Catar", siglaA: "ca", siglaB: "qa", data: "18/06 • Quinta", hora: "16:00", local: "Vancouver" },
+    { id: "B4", timeA: "Suíça", timeB: "Bósnia", siglaA: "ch", siglaB: "ba", data: "18/06 • Quinta", hora: "19:00", local: "Los Angeles" },
     { id: "C3", timeA: "Brasil", timeB: "Haiti", siglaA: "br", siglaB: "ht", data: "19/06 • Sexta", hora: "21:30", local: "Filadélfia" },
     { id: "C4", timeA: "Marrocos", timeB: "Escócia", siglaA: "ma", siglaB: "gb-sct", data: "19/06 • Sexta", hora: "19:00", local: "Boston" },
     { id: "D3", timeA: "EUA", timeB: "Austrália", siglaA: "us", siglaB: "au", data: "19/06 • Sexta", hora: "16:00", local: "Seattle" },
@@ -84,8 +84,8 @@ const jogos = {
   rodada3: [
     { id: "A5", timeA: "México", timeB: "Tchéquia", siglaA: "mx", siglaB: "cz", data: "24/06 • Quarta", hora: "22:00", local: "Cidade do México" },
     { id: "A6", timeA: "África do Sul", timeB: "Coreia do Sul", siglaA: "za", siglaB: "kr", data: "24/06 • Quarta", hora: "22:00", local: "Monterrey" },
-    { id: "B5", timeA: "Canadá", timeB: "Catar", siglaA: "ca", siglaB: "qa", data: "24/06 • Quarta", hora: "16:00", local: "San Francisco" },
-    { id: "B6", timeA: "Bósnia", timeB: "Suíça", siglaA: "ba", siglaB: "ch", data: "24/06 • Quarta", hora: "16:00", local: "Vancouver" },
+    { id: "B5", timeA: "Canadá", timeB: "Suíça", siglaA: "ca", siglaB: "ch", data: "24/06 • Quarta", hora: "16:00", local: "San Francisco" },
+    { id: "B6", timeA: "Bósnia", timeB: "Catar", siglaA: "ba", siglaB: "qa", data: "24/06 • Quarta", hora: "16:00", local: "Vancouver" },
     { id: "C5", timeA: "Brasil", timeB: "Escócia", siglaA: "br", siglaB: "gb-sct", data: "24/06 • Quarta", hora: "19:00", local: "Miami" },
     { id: "C6", timeA: "Marrocos", timeB: "Haiti", siglaA: "ma", siglaB: "ht", data: "24/06 • Quarta", hora: "19:00", local: "Atlanta" },
     { id: "D5", timeA: "EUA", timeB: "Turquia", siglaA: "us", siglaB: "tr", data: "25/06 • Quinta", hora: "23:00", local: "Los Angeles" },
