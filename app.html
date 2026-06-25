@@ -60,6 +60,25 @@
     
     <div id="admin-panel" class="hidden admin-box" style="background: #f5f5f5; border: 2px dashed #d32f2f; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
       <h4 style="margin-top: 10px; margin-bottom: 15px; color: #333;">👥 Gerenciamento de Jogadores Cadastrados</h4>
+
+      <div style="background: #ffebee; padding: 15px; border-radius: 8px; border-left: 4px solid #d32f2f; margin-top: 25px;">
+        <h3 style="color: #c62828; margin-top: 0;">🔒 Travar / Destravar Mata-Mata</h3>
+        <p style="font-size: 0.85em; color: #555; margin-bottom: 15px;">Controle os palpites das novas fases sem alterar o bloqueio da fase de grupos.</p>
+        <div style="display: flex; gap: 10px;">
+            <button id="btn-toggle-trava-16avos" class="btn-primary" style="background: #e65100; flex: 1;">Travar 16-Avos</button>
+            <button id="btn-toggle-trava-oitavas" class="btn-primary" style="background: #e65100; flex: 1;">Travar Oitavas</button>
+        </div>
+    </div>
+
+    <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #1976d2; margin-top: 25px; margin-bottom: 15px;">
+        <h3 style="color: #1976d2; margin-top: 0;">⚙️ Definir Confrontos (Mata-Mata)</h3>
+        <p style="font-size: 0.85em; color: #555; margin-bottom: 15px;">Escreva o nome e a sigla (ex: za, ca, br) das seleções que se classificaram para liberar os jogos na tela dos participantes.</p>
+        
+        <div id="admin-definir-confrontos-list" style="display: flex; flex-direction: column; gap: 10px;">
+            </div>
+        
+        <button id="btn-salvar-confrontos" class="btn-primary" style="background-color: #1976d2; margin-top: 15px; width: 100%;">Salvar Seleções Classificadas</button>
+    </div>
       
       <div style="display: flex; gap: 10px; margin-bottom: 15px;">
           <button id="btn-carregar-usuarios" class="btn-primary" style="background-color: #1976d2; margin-bottom: 0;">🔄 Carregar Lista de Jogadores</button>
@@ -76,7 +95,9 @@
           <option value="rodada1">Jogos da Rodada 1</option>
           <option value="rodada2">Jogos da Rodada 2</option>
           <option value="rodada3">Jogos da Rodada 3</option>
-          <option value="todas">Mostrar Todos os 72 Jogos</option>
+          <option value="rodada16avos">Mata-Mata: 16-Avos</option>
+          <option value="rodadaOitavas">Mata-Mata: Oitavas</option>
+          <option value="todas">Mostrar Todos os Jogos</option>
         </select>
       </div>
 
@@ -86,7 +107,7 @@
       <hr style="border-top: 2px solid #ccc; margin: 30px 0 15px 0;">
       <h4 style="margin-top: 10px; margin-bottom: 15px; color: #333;">👥 Gerenciamento de Jogadores Cadastrados</h4>
       
-      <button id="btn-carregar-usuarios" class="btn-primary" style="background-color: #1976d2; margin-bottom: 15px;">🔄 Carregar Lista de Jogadores</button>
+      
       
       <div id="lista-admin-usuarios" style="display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #ccc;">
           <p style="text-align: center; color: #777; font-size: 0.9em; margin: 0;">Clique no botão azul acima para carregar todos os participantes.</p>
@@ -98,7 +119,10 @@
       <button class="tab-btn active" data-target="tab-rodada1">Rodada 1</button>
       <button class="tab-btn" data-target="tab-rodada2">Rodada 2</button>
       <button class="tab-btn" data-target="tab-rodada3">Rodada 3</button>
+      <button class="tab-btn" data-target="tab-16avos">16-Avos</button>
+      <button class="tab-btn" data-target="tab-oitavas">Oitavas</button>
       <button class="tab-btn" data-target="tab-ranking">Ranking</button>
+    
     </div>
 
     <div id="tab-rodada1" class="tab-content active">
@@ -116,18 +140,34 @@
       <button class="btn-primary save-btn" data-rodada="rodada3">💾 Salvar Rodada 3</button>
     </div>
 
+    <div id="tab-16avos" class="tab-content hidden">
+        <h2 style="color: #2e7d32; text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;">16-Avos de Final</h2>
+        <div id="list-16avos">
+            </div>
+        <button class="btn-primary save-btn" data-rodada="rodada16avos" style="width: 100%; margin-top: 15px;">Salvar Palpites (16-Avos)</button>
+    </div>
+
+    <div id="tab-oitavas" class="tab-content hidden">
+        <h2 style="color: #2e7d32; text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px;">Oitavas de Final</h2>
+        <div id="list-oitavas">
+            </div>
+        <button class="btn-primary save-btn" data-rodada="rodadaOitavas" style="width: 100%; margin-top: 15px;">Salvar Palpites (Oitavas)</button>
+    </div>
+
     <div id="tab-ranking" class="tab-content hidden">
       <h2 style="text-align: center; color: #333; margin-bottom: 10px;">🏆 Classificação</h2>
       
-      <div style="text-align: center; margin-bottom: 20px;">
-        <select id="filtro-ranking" class="custom-select">
-          <option value="geral">Geral (Todas as Rodadas)</option>
-          <option value="rodada1">Apenas Rodada 1</option>
-          <option value="rodada2">Apenas Rodada 2</option>
-          <option value="rodada3">Apenas Rodada 3</option>
+      <div style="text-align: center; margin-bottom: 15px; padding: 10px; background: #e8f5e9; border-radius: 8px;">
+        <label for="filtro-ranking-fase" style="font-weight: bold; color: #2e7d32; margin-right: 10px;">🏆 Ver Ranking de:</label>
+        <select id="filtro-ranking-fase" style="padding: 8px; border-radius: 5px; font-weight: bold; border: 1px solid #81c784; outline: none; cursor: pointer;">
+            <option value="grupos">Fase de Grupos (Soma da 1, 2 e 3)</option>
+            <option value="rodada1">Apenas Rodada 1</option>
+            <option value="rodada2">Apenas Rodada 2</option>
+            <option value="rodada3">Apenas Rodada 3</option>
+            <option value="16avos">Mata-Mata: 16-Avos</option>
+            <option value="oitavas">Mata-Mata: Oitavas</option>
         </select>
-      </div>
-
+    </div>
       <div id="ranking-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
     </div>
 
@@ -142,12 +182,14 @@
             
             <h3 id="modal-nome-jogador" style="margin-top: 5px; color: #2e7d32; text-align: left; border-bottom: 2px solid #eee; padding-bottom: 10px; padding-right: 70px;">Palpites do Jogador</h3>
             
-            <select id="filtro-modal-rodadas" style="width: 100%; padding: 8px; margin-top: 10px; border-radius: 6px; border: 1px solid #ccc; font-weight: bold; color: #555;">
-                <option value="todas">Todas as Rodadas</option>
-                <option value="rodada1">Rodada 1</option>
-                <option value="rodada2">Rodada 2</option>
-                <option value="rodada3">Rodada 3</option>
-            </select>
+            <select id="filtro-modal-rodadas" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold; outline: none;">
+        <option value="todas">Todas as Rodadas</option>
+        <option value="rodada1">Rodada 1</option>
+        <option value="rodada2">Rodada 2</option>
+        <option value="rodada3">Rodada 3</option>
+        <option value="rodada16avos">16-Avos de Final</option>
+        <option value="rodadaOitavas">Oitavas de Final</option>
+      </select>
 
             <div id="modal-lista-palpites" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
                 </div>
