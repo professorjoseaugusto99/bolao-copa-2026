@@ -106,6 +106,34 @@ const jogos = {
     { id: "K6", timeA: "RD Congo", timeB: "Uzbequistão", siglaA: "cd", siglaB: "uz", data: "27/06 • Sábado", hora: "20:30", local: "Houston" },
     { id: "L5", timeA: "Inglaterra", timeB: "Panamá", siglaA: "gb-eng", siglaB: "pa", data: "27/06 • Sábado", hora: "18:00", local: "Nova York/NJ" },
     { id: "L6", timeA: "Croácia", timeB: "Gana", siglaA: "hr", siglaB: "gh", data: "27/06 • Sábado", hora: "18:00", local: "Filadélfia" }
+  ],
+  rodada16avos: [
+    { id: "M1", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M2", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M3", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M4", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M5", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M6", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M7", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M8", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M9", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M10", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M11", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M12", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M13", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M14", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M15", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "M16", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" }
+  ],
+  rodadaOitavas: [
+    { id: "O1", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "O2", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "O3", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "O4", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "O5", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "O6", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "O7", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" },
+    { id: "O8", timeA: "A Definir", timeB: "A Definir", siglaA: "un", siglaB: "un", data: "Data a definir", hora: "--:--", local: "Estádio" }
   ]
 };
 // --- ELEMENTOS DA TELA ---
@@ -129,6 +157,7 @@ onAuthStateChanged(auth, async (user) => {
     
 // --- NOVAS CHAMADAS AQUI ---
     await carregarSeletorDeBoloes(user.uid); // 🚨 LIGA O ROTEADOR DE VLAN AQUI!
+    await carregarConfrontosMataMata();
     renderizarJogosAdmin();
     await carregarResultadosOficiais();
     // ----------------------------
@@ -136,6 +165,7 @@ onAuthStateChanged(auth, async (user) => {
     // VERIFICAÇÃO DE ADMIN
     if (user.uid === ADMIN_UID) {
       adminPanel.classList.remove('hidden');
+      renderizarPainelConfrontosAdmin();
       
       // Lê o status atual do bloqueio no banco de dados
       try {
@@ -152,6 +182,8 @@ onAuthStateChanged(auth, async (user) => {
     renderizarJogos('rodada1', 'list-rodada1');
     renderizarJogos('rodada2', 'list-rodada2');
     renderizarJogos('rodada3', 'list-rodada3');
+    renderizarJogos('rodada16avos', 'list-16avos');
+    renderizarJogos('rodadaOitavas', 'list-oitavas'); 
     
     await carregarPalpitesExistentes();
     atualizarRanking();
@@ -232,7 +264,37 @@ const botoesSalvar = document.querySelectorAll('.save-btn');
 
 botoesSalvar.forEach(btn => {
   btn.addEventListener('click', async (e) => {
-    const rodadaKey = e.currentTarget.dataset.rodada; 
+    const rodadaKey = e.currentTarget.dataset.rodada;
+
+    // 👇 NOVA VERIFICAÇÃO DE TRAVAS 👇
+    try {
+      const docStatus = await getDoc(doc(db, "configuracoes", "status"));
+      const travas = docStatus.exists() ? docStatus.data() : {};
+
+      // Verifica 16-Avos
+      if (rodadaKey === 'rodada16avos' && travas.trava_16avos) {
+          alert("🔒 Os palpites para os 16-Avos estão encerrados!");
+          return;
+      }
+      
+      // Verifica Oitavas
+      if (rodadaKey === 'rodadaOitavas' && travas.trava_oitavas) {
+          alert("🔒 Os palpites para as Oitavas estão encerrados!");
+          return;
+      }
+
+      // Verifica Fase de Grupos (Se você usava uma trava com outro nome no banco, troque o 'bloqueio_geral' abaixo)
+      if (['rodada1', 'rodada2', 'rodada3'].includes(rodadaKey) && travas.bloqueio_geral) {
+          alert("🔒 Os palpites para a Fase de Grupos estão encerrados!");
+          return;
+      }
+    } catch (error) {
+      console.error("Erro ao checar travas:", error);
+      alert("Falha de conexão ao verificar segurança.");
+      return;
+    }
+    // 👆 FIM DA NOVA VERIFICAÇÃO DE TRAVAS 👆
+
     const palpites = {};
 
     jogos[rodadaKey].forEach(jogo => {
@@ -290,7 +352,7 @@ async function carregarPalpitesExistentes() {
     if (docSnap.exists()) {
       const dados = docSnap.data();
       
-      ['rodada1', 'rodada2', 'rodada3'].forEach(rodadaKey => {
+      ['rodada1', 'rodada2', 'rodada3', 'rodada16avos', 'rodadaOitavas'].forEach(rodadaKey => {
         if (dados[rodadaKey]) {
           Object.keys(dados[rodadaKey]).forEach(jogoId => {
             const inputA = document.getElementById(`${jogoId}-A`);
@@ -354,7 +416,7 @@ function renderizarJogosAdmin() {
   if (!adminMatchesList) return;
   adminMatchesList.innerHTML = "";
   
-  ['rodada1', 'rodada2', 'rodada3'].forEach(rodadaKey => {
+  ['rodada1', 'rodada2', 'rodada3', 'rodada16avos', 'rodadaOitavas'].forEach(rodadaKey => {
     jogos[rodadaKey].forEach(jogo => {
       const card = document.createElement('div');
       
@@ -409,7 +471,7 @@ if (saveResultsBtn) {
   saveResultsBtn.addEventListener('click', async () => {
     const resultadosOficiais = {};
     
-    ['rodada1', 'rodada2', 'rodada3'].forEach(rodadaKey => {
+    ['rodada1', 'rodada2', 'rodada3', 'rodada16avos', 'rodadaOitavas'].forEach(rodadaKey => {
       jogos[rodadaKey].forEach(jogo => {
         const inputA = document.getElementById(`admin-${jogo.id}-A`);
         const inputB = document.getElementById(`admin-${jogo.id}-B`);
@@ -509,9 +571,8 @@ function calcularPontos(palpiteA, palpiteB, realA, realB) {
   return 0; 
 }
 
-// --- GERAR E RENDERIZAR RANKING (COM FILTRO DE REDE) ---
-// A função recebe o filtro de rodada ('geral', 'rodada1', etc)
-async function atualizarRanking(filtro = 'geral') {
+// --- GERAR E RENDERIZAR RANKING (COM FILTRO DE REDE E FASE INDIVIDUAL) ---
+async function atualizarRanking() {
   const rankingList = document.getElementById('ranking-list');
   if (!rankingList) return;
   
@@ -532,6 +593,25 @@ async function atualizarRanking(filtro = 'geral') {
       return; // Aborta o cálculo de pontos para não vazar a lista
     }
 
+    // 🚀 O NOVO MOTOR DE FILTRO DE FASES ENTRA AQUI
+    const filtroRankingFase = document.getElementById('filtro-ranking-fase');
+    // Se o filtro não existir na tela ainda, assume 'grupos' como padrão
+    const faseSelecionada = filtroRankingFase ? filtroRankingFase.value : 'grupos';
+
+    // 👇 A LÓGICA QUE FALTAVA ESTÁ AQUI DENTRO 👇
+    let rodadasParaSomar = [];
+    if (faseSelecionada === 'grupos') {
+        rodadasParaSomar = ['rodada1', 'rodada2', 'rodada3'];
+    } else if (faseSelecionada === '16avos') {
+        rodadasParaSomar = ['rodada16avos'];
+    } else if (faseSelecionada === 'oitavas') {
+        rodadasParaSomar = ['rodadaOitavas'];
+    } else {
+        // Se a pessoa escolheu rodada1, rodada2 ou rodada3 isoladamente no menu:
+        rodadasParaSomar = [faseSelecionada];
+    }
+    // 👆 FIM DA LÓGICA NOVA 👆
+
     const docResultados = await getDoc(doc(db, "configuracoes", "resultados"));
     const placaresReais = docResultados.exists() ? docResultados.data().placarReal || {} : {};
 
@@ -542,8 +622,7 @@ async function atualizarRanking(filtro = 'geral') {
       const dados = userDoc.data();
       const uid = userDoc.id;
 
-      // 🚨 A MÁGICA DA VLAN ACONTECE AQUI:
-      // Se o jogador não tiver a etiqueta desse bolão no array dele, o sistema ignora e pula!
+      // 🚨 A MÁGICA DA VLAN ACONTECE AQUI
       if (bolaoAtivo && (!dados.boloesInscritos || !dados.boloesInscritos.includes(bolaoAtivo))) {
         return; // Break silencioso para o próximo jogador
       }
@@ -551,9 +630,8 @@ async function atualizarRanking(filtro = 'geral') {
       let pontosTotais = 0;
       const nome = dados.nome || "Jogador sem nome";
 
-      const rodadasParaCalcular = filtro === 'geral' ? ['rodada1', 'rodada2', 'rodada3'] : [filtro];
-
-      rodadasParaCalcular.forEach(rodada => {
+      // 🚀 LOOP AGORA RESPEITA APENAS A FASE SELECIONADA
+      rodadasParaSomar.forEach(rodada => {
         if (dados[rodada]) {
           Object.keys(dados[rodada]).forEach(jogoId => {
             const palpite = dados[rodada][jogoId];
@@ -566,7 +644,7 @@ async function atualizarRanking(filtro = 'geral') {
         }
       });
 
-      tabela.push({ nome: nome, pontos: pontosTotais, uid: uid }); // 👈 2. UID ADICIONADO AQUI
+      tabela.push({ nome: nome, pontos: pontosTotais, uid: uid }); // UID ADICIONADO AQUI
     });
 
     // Ordena do maior para o menor
@@ -576,7 +654,7 @@ async function atualizarRanking(filtro = 'geral') {
     
     // Tratamento de erro se a sala ainda estiver vazia
     if (tabela.length === 0) {
-        rankingList.innerHTML = "<p style='text-align:center; color:#555;'>Nenhum jogador pontuou neste bolão ainda.</p>";
+        rankingList.innerHTML = "<p style='text-align:center; color:#555;'>Nenhum jogador pontuou nesta fase ainda.</p>";
         return;
     }
 
@@ -604,12 +682,10 @@ async function atualizarRanking(filtro = 'geral') {
   }
 }
 
-// --- ESCUTADOR DE CLIQUE DO FILTRO ---
-const filtroElemento = document.getElementById('filtro-ranking');
-if (filtroElemento) {
-  filtroElemento.addEventListener('change', async (e) => {
-    await atualizarRanking(e.target.value);
-  });
+// 🚀 ESCUTADOR DO FILTRO (Faz a tabela atualizar na mesma hora que o usuário clica)
+const filtroRankingDropdown = document.getElementById('filtro-ranking-fase');
+if (filtroRankingDropdown) {
+    filtroRankingDropdown.addEventListener('change', atualizarRanking);
 }
 
 // --- SENSOR DO FILTRO DE RODADAS (ADMIN) COM DIAGNÓSTICO ---
@@ -890,7 +966,7 @@ if (btnExportarUser) {
       csv += `Rodada;ID do Jogo;Palpite Time A;Palpite Time B\n`;
 
       // Varre as 3 rodadas estruturadas no banco
-      const rodadas = ['rodada1', 'rodada2', 'rodada3'];
+      const rodadas = ['rodada1', 'rodada2', 'rodada3', 'rodada16avos', 'rodadaOitavas'];
       rodadas.forEach(rodada => {
         if (dados[rodada]) {
           // Ordena os jogos numericamente para o CSV ficar organizado
@@ -942,7 +1018,7 @@ if (btnExportarAdmin) {
         const nome = dados.nome || "Jogador Sem Nome";
         const redes = (dados.boloesInscritos && dados.boloesInscritos.length > 0) ? dados.boloesInscritos.join(" | ") : "Nenhum";
         
-        const rodadas = ['rodada1', 'rodada2', 'rodada3'];
+        const rodadas = ['rodada1', 'rodada2', 'rodada3', 'rodada16avos', 'rodadaOitavas'];
         rodadas.forEach(rodada => {
           if (dados[rodada]) {
             const jogosOrdenados = Object.keys(dados[rodada]).sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
@@ -993,7 +1069,7 @@ function renderizarPalpitesModal(filtro) {
   if (!dadosModalAtual) return;
   
   let htmlPalpites = "";
-  const rodadas = filtro === 'todas' ? ['rodada1', 'rodada2', 'rodada3'] : [filtro];
+  const rodadas = filtro === 'todas' ? ['rodada1', 'rodada2', 'rodada3', 'rodada16avos', 'rodadaOitavas'] : [filtro];
   
   rodadas.forEach(rodada => {
     if (dadosModalAtual[rodada]) {
@@ -1106,3 +1182,119 @@ if (containerRanking) {
   });
 }
 
+// =============================================================================
+// 🏆 MÓDULO MATA-MATA: INJEÇÃO DINÂMICA DE CONFRONTOS
+// =============================================================================
+
+// 1. Motor que lê os dados do Admin e injeta na matriz ANTES de desenhar o ecrã
+async function carregarConfrontosMataMata() {
+  try {
+    const docSnap = await getDoc(doc(db, "configuracoes", "confrontos"));
+    if (docSnap.exists()) {
+      const confrontos = docSnap.data();
+      ['rodada16avos', 'rodadaOitavas'].forEach(rodada => {
+        jogos[rodada].forEach(jogo => {
+          if (confrontos[jogo.id]) {
+            jogo.timeA = confrontos[jogo.id].timeA || jogo.timeA;
+            jogo.timeB = confrontos[jogo.id].timeB || jogo.timeB;
+            jogo.siglaA = confrontos[jogo.id].siglaA || jogo.siglaA;
+            jogo.siglaB = confrontos[jogo.id].siglaB || jogo.siglaB;
+            jogo.data = confrontos[jogo.id].data || jogo.data;
+            jogo.hora = confrontos[jogo.id].hora || jogo.hora;
+          }
+        });
+      });
+    }
+  } catch (error) {
+    console.error("Erro ao puxar confrontos dinâmicos:", error);
+  }
+}
+
+// 2. Construtor do painel de Admin (onde vais digitar as equipas classificadas)
+function renderizarPainelConfrontosAdmin() {
+  const container = document.getElementById('admin-definir-confrontos-list');
+  if (!container) return;
+  container.innerHTML = "";
+
+  ['rodada16avos', 'rodadaOitavas'].forEach(rodada => {
+    const titulo = document.createElement('h4');
+    titulo.innerText = rodada === 'rodada16avos' ? 'Fase: 16-Avos' : 'Fase: Oitavas';
+    titulo.style.color = "#1976d2";
+    container.appendChild(titulo);
+
+    jogos[rodada].forEach(jogo => {
+      const div = document.createElement('div');
+      div.style.cssText = "display: flex; gap: 5px; align-items: center; background: #fff; padding: 10px; border: 1px solid #ccc; border-radius: 4px; overflow-x: auto;";
+      div.innerHTML = `
+        <span style="font-weight: bold; width: 35px; color: #555;">${jogo.id}</span>
+        <input type="text" id="cfg-timeA-${jogo.id}" value="${jogo.timeA}" placeholder="Time A" style="width: 110px; padding: 5px;">
+        <input type="text" id="cfg-siglaA-${jogo.id}" value="${jogo.siglaA}" placeholder="Sigla (br)" style="width: 55px; padding: 5px;">
+        <span style="font-weight: bold; color: #e65100;"> X </span>
+        <input type="text" id="cfg-timeB-${jogo.id}" value="${jogo.timeB}" placeholder="Time B" style="width: 110px; padding: 5px;">
+        <input type="text" id="cfg-siglaB-${jogo.id}" value="${jogo.siglaB}" placeholder="Sigla (pt)" style="width: 55px; padding: 5px;">
+        <input type="text" id="cfg-data-${jogo.id}" value="${jogo.data}" placeholder="15/06" style="width: 70px; padding: 5px;">
+        <input type="text" id="cfg-hora-${jogo.id}" value="${jogo.hora}" placeholder="16:00" style="width: 60px; padding: 5px;">
+      `;
+      container.appendChild(div);
+    });
+  });
+}
+
+// 3. Gatilho que guarda as tuas configurações no banco de dados
+const btnSalvarConfrontos = document.getElementById('btn-salvar-confrontos');
+if (btnSalvarConfrontos) {
+  btnSalvarConfrontos.addEventListener('click', async () => {
+    const novosConfrontos = {};
+    ['rodada16avos', 'rodadaOitavas'].forEach(rodada => {
+      jogos[rodada].forEach(jogo => {
+        const tA = document.getElementById(`cfg-timeA-${jogo.id}`).value;
+        const sA = document.getElementById(`cfg-siglaA-${jogo.id}`).value;
+        const tB = document.getElementById(`cfg-timeB-${jogo.id}`).value;
+        const sB = document.getElementById(`cfg-siglaB-${jogo.id}`).value;
+        const data = document.getElementById(`cfg-data-${jogo.id}`).value;
+        const hora = document.getElementById(`cfg-hora-${jogo.id}`).value;
+        
+        if(tA !== "A Definir" || tB !== "A Definir") {
+          novosConfrontos[jogo.id] = { timeA: tA, siglaA: sA, timeB: tB, siglaB: sB, data: data, hora: hora };
+        }
+      });
+    });
+
+    try {
+      await setDoc(doc(db, "configuracoes", "confrontos"), novosConfrontos, { merge: true });
+      alert("✅ Confrontos oficiais definidos com sucesso!.");
+    } catch (error) {
+      console.error("Erro ao guardar confrontos:", error);
+      alert("Falha de ligação ao tentar guardar os confrontos.");
+    }
+  });
+}
+
+// 🚀 Lógica de Travar/Destravar Fases Específicas
+['16avos', 'oitavas'].forEach(fase => {
+    const btnTrava = document.getElementById(`btn-toggle-trava-${fase}`);
+    if (btnTrava) {
+        btnTrava.addEventListener('click', async () => {
+            try {
+                // Puxa o status atual
+                const docSnap = await getDoc(doc(db, "configuracoes", "status"));
+                let statusAtual = false; // Padrão destravado
+                if (docSnap.exists() && docSnap.data()[`trava_${fase}`] !== undefined) {
+                    statusAtual = docSnap.data()[`trava_${fase}`];
+                }
+
+                // Inverte o status e salva
+                const novoStatus = !statusAtual;
+                await setDoc(doc(db, "configuracoes", "status"), {
+                    [`trava_${fase}`]: novoStatus
+                }, { merge: true });
+
+                alert(`✅ Fase ${fase.toUpperCase()} agora está ${novoStatus ? "TRAVADA 🔒" : "DESTRAVADA 🔓"}!`);
+                window.location.reload();
+            } catch (error) {
+                console.error("Erro ao alterar trava:", error);
+                alert("Falha de conexão.");
+            }
+        });
+    }
+});
