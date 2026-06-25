@@ -266,25 +266,30 @@ botoesSalvar.forEach(btn => {
   btn.addEventListener('click', async (e) => {
     const rodadaKey = e.currentTarget.dataset.rodada;
 
-    // 👇 NOVA VERIFICAÇÃO DE TRAVAS 👇
+// 👇 NOVA VERIFICAÇÃO DE TRAVAS CORRIGIDA 👇
     try {
+      // 1. Busca as travas novas do Mata-Mata
       const docStatus = await getDoc(doc(db, "configuracoes", "status"));
-      const travas = docStatus.exists() ? docStatus.data() : {};
+      const travasMataMata = docStatus.exists() ? docStatus.data() : {};
+
+      // 2. Busca a trava antiga da Fase de Grupos no lugar certo
+      const docGeral = await getDoc(doc(db, "configuracoes", "geral"));
+      const travaGrupos = docGeral.exists() ? docGeral.data().bloqueado : false;
 
       // Verifica 16-Avos
-      if (rodadaKey === 'rodada16avos' && travas.trava_16avos) {
+      if (rodadaKey === 'rodada16avos' && travasMataMata.trava_16avos) {
           alert("🔒 Os palpites para os 16-Avos estão encerrados!");
           return;
       }
       
       // Verifica Oitavas
-      if (rodadaKey === 'rodadaOitavas' && travas.trava_oitavas) {
+      if (rodadaKey === 'rodadaOitavas' && travasMataMata.trava_oitavas) {
           alert("🔒 Os palpites para as Oitavas estão encerrados!");
           return;
       }
 
-      // Verifica Fase de Grupos (Se você usava uma trava com outro nome no banco, troque o 'bloqueio_geral' abaixo)
-      if (['rodada1', 'rodada2', 'rodada3'].includes(rodadaKey) && travas.bloqueio_geral) {
+      // Verifica Fase de Grupos (usando a variável e o local corretos)
+      if (['rodada1', 'rodada2', 'rodada3'].includes(rodadaKey) && travaGrupos) {
           alert("🔒 Os palpites para a Fase de Grupos estão encerrados!");
           return;
       }
